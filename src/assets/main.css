@@ -1,0 +1,271 @@
+:root {
+	box-sizing: border-box;
+	--ff-text: "Montserrat", sans-serif;
+	--ff-title: "Raleway", sans-serif;
+	/* --text-color: #333333; */
+}
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+	margin: 0;
+	padding: 0;
+}
+
+img {
+	max-width: 100%;
+}
+button {
+	border: 0;
+	background-color: transparent;
+	cursor: pointer;
+	text-transform: capitalize;
+	display: inline-block;
+}
+.todo__container {
+	max-width: 500px;
+	width: 100%;
+	margin: 0 auto;
+	/* border: 1px solid; */
+	min-height: 50vh;
+	overflow: hidden;
+	padding: 0 .5em;
+
+}
+.title {
+	font-family: var(--ff-title);
+	font-size: 36px;
+	font-weight: 700;
+	color: #333333;
+	letter-spacing: -0.045em;
+	text-align: center;
+	margin: 20px 0 30px;
+
+	/* line-height: 42px; */
+}
+
+.tab__container {
+	border-bottom: 1px solid #bdbdbd;
+	display: flex;
+	justify-content: space-around;
+}
+.btn {
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 17px;
+
+	color: #333333;
+
+	padding: 1em;
+
+	position: relative;
+	text-transform: capitalize;
+}
+.btn.active::before {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: #2f80ed;
+	border-radius: 4px 4px 0px 0px;
+}
+.btn--all {
+  margin-left: 4em;
+}
+
+
+
+/*! input */
+.form__group {
+	display: flex;
+	gap: 1em;
+	margin: 1em 0;
+}
+
+label {
+	flex: 4;
+}
+input[type="text"] {
+	width: 100%;
+	border: 1px solid #bdbdbd;
+	border-radius: 12px;
+	padding: 1.2em;
+	flex: 4;
+	display: block;
+}
+input::placeholder {
+	font-family: "Montserrat";
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
+	/* identical to box height */
+
+	/* Gray 3 */
+
+	color: #828282;
+}
+.addTodo {
+	flex: 1.5;
+	/* padding: 1.2em 1.5em; */
+	font-family: "Montserrat";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 17px;
+
+	color: #ffffff;
+
+	background: #2f80ed;
+	box-shadow: 0px 2px 6px rgba(127, 177, 243, 0.4);
+	border-radius: 12px;
+}
+@media (min-width: 400px){
+  .addTodo {
+    flex: 1;
+  }
+}
+
+/* ! output */
+
+.todo__item {
+	/* display: flex; */
+	/* justify-content: flex-start; */
+	padding: 1em 0;
+  display: grid;
+  grid-template-columns: auto 2fr auto;
+	align-items: center;
+  /* background-color: red; */
+  /* margin-top: 1em; */
+}
+
+.checkbox__label{
+  font-size: 1rem;
+}
+.input__checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.4em;
+  height: 1.4em;
+  border: 0.1em solid currentColor;
+  border: 0.1em solid #bdbdbd;
+  border-radius: 4px;
+  transform: translateY(-0.075em);
+
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+
+  transition: all .3s ease;
+  overflow: hidden;
+}
+.input__checkbox::before {
+  content: '';
+  width: .5em;
+  height: .5em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em white;
+
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.input__checkbox--completed:checked {
+  background-color: #2f80ed;
+}
+.input__checkbox--completed:checked:before {
+  transform: scale(1);
+}
+
+
+
+
+
+.todo__content {
+	font-family: "Montserrat";
+
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 22px;
+	/* identical to box height */
+
+	/*  */
+
+	/* Gray 1 */
+
+	color: #333333;
+  margin-inline: 0.7em;
+
+}
+.todo__content--complete {
+  text-decoration-line: line-through;
+}
+
+.todo__content--all {
+	font-family: "Montserrat";
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 22px;
+	/* identical to box height */
+
+	color: #000000;
+}
+
+.deleteBtn {
+	/* display: block; */
+	margin-left: auto;
+	/* background-color: #2f80ed; */
+	/* border: 1px solid; */
+	/* flex: 1; */
+	/* width: 2em;
+  height: 2em; */
+	/* font-size: 1rem; */
+	/* display: flex; */
+  /* padding: 1em; */
+  /* background: #bdbdbd; */
+}
+/* .deleteBtn {
+} */
+.deleteBtn img {
+  display: block;
+}
+.deleteAllBtn {
+	font-family: "Montserrat";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 15px;
+
+	color: #ffffff;
+
+	background-color: #eb5757;
+	border-radius: 4px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* padding: 1em 1em 1em 0.5em; */
+	/* gap: 1em; */
+  padding: 1em;
+  margin-left: auto;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-active, .fade-move {
+  transition: all .3s linear;
+}
+.fade-leave-active{
+  transition: all .3s linear;
+  position: absolute;
+}
+
