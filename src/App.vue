@@ -2,39 +2,13 @@
 	<div class="todo__container">
 		<h1 class="title">#todo</h1>
 
-		<div class="tab__container">
-			<button
-				class="btn btn--all"
-				@click="activeBtn = 'all'"
-				:class="activeBtn === 'all' ? 'active' : ''"
-			>
-				all
-			</button>
+		<tab-container 
+		:activeBtn="activeBtn" 
+		@tab="changeTab"
+		/>
 
-			<button
-				class="btn"
-				@click="activeBtn = 'active'"
-				:class="activeBtn === 'active' ? 'active' : ''"
-			>
-				active
-			</button>
-			<button
-				class="btn"
-				@click="activeBtn = 'completed'"
-				:class="activeBtn === 'completed' ? 'active' : ''"
-			>
-				completed
-			</button>
-		</div>
+		<app-input v-model="todo"/>
 
-		<div class="input__Container">
-			<form @submit.prevent="addTodo" class="form__group">
-				<label>
-					<input type="text" placeholder="add details" v-model="todo" />
-				</label>
-				<button type="submit" class="addTodo">add</button>
-			</form>
-		</div>
 
 		<div class="output__container">
 			<ul class="todo__lists">
@@ -63,33 +37,51 @@
 							{{ todo.content }}
 						</span>
 
-						<button class="deleteBtn" v-show="activeBtn === 'completed'">
+						<button 
+						class="deleteBtn" 
+						v-show="activeBtn === 'completed'"
+						@click="deleteTodo(todo.id)">
 							<img src="@/assets/delete_b.svg" alt="" />
 							<!-- <span> delete </span> -->
 						</button>
 					</li>
 				</transition-group>
 			</ul>
-			<button class="deleteAllBtn" v-show="showBtn">
-				<!-- v-show="activeBtn === 'completed' && activeBtn.length > 0" -->
+
+			<app-button
+			class="deleteAllBtn"
+			@click="clearComplete"
+			v-show="showDeleteAllBtn"
+			>
 				<!-- <span class="material-icons-outlined">delete_outline</span> -->
 				<img src="@/assets/delete_b.svg" alt="" />
 				<span>delete all</span>
-			</button>
+			</app-button>
 		</div>
 	</div>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import TabContainer from "@/components/TabContainer.vue";
+import AppInput from "@/components/AppInput.vue";
+import AppButton from "@/components/AppButton.vue";
+
 import {v4 as uuidv4} from 'uuid';
+import { ref, computed, watch, onMounted } from "vue";
+
 export default {
+	name: "App",
+	components: {
+		TabContainer,
+		AppInput,
+		AppButton,
+	},
 	setup() {
 		let activeBtn = ref("all");
 		let todo = ref("");
 		const todos = ref([]);
 
-		let showBtn = computed(() => {
+		let showDeleteAllBtn = computed(() => {
 			return (
 				activeBtn.value === "completed" &&
 				todos.value.filter((todo) => {
@@ -98,7 +90,26 @@ export default {
 			);
 		});
 
-		console.log(activeBtn.value.length);
+		watch(todo, (newVal)=>{
+			if (todo.value !== "") {
+				let item = {
+					content: newVal,
+					isCompleted: false,
+					id: uuidv4(),
+				};
+				todos.value.unshift(item);
+				todo.value = "";
+			}
+		}, {deep: true})
+
+		watch(todos, (newVal)=>{
+				localStorage.setItem("todos", JSON.stringify(todos.value))
+				console.log(newVal);
+		}, {deep: true})
+
+		onMounted(()=>{
+			todos.value = JSON.parse(localStorage.getItem("todos")) || []
+		})
 
 		const filteredTodos = computed(() => {
 			if (activeBtn.value === "active") {
@@ -114,43 +125,48 @@ export default {
 			}
 		});
 
-		// onMounted(()=>{
-		//   fetch('https://syncwith.com/api/metaweather-api', {
-		//     method : "GET",
-		//     mode: 'cors',
-		// }).then(res=> res.json()).then(data=> console.log(data))
-		// })
+		function changeTab(switchTabTo){
+			activeBtn.value = switchTabTo
+		}
 
-		// watch(todo, (newVal)=>{
-		//   if(newVal !== ''){
-		//     let item = {
-		//       content: newVal,
-		//       isCompleted: false,
-		//       id: 1
-		//     }
-		//     todos.value.unshift(item)
-		//   }
-		// })
 
-		function addTodo() {
-			if (todo.value !== "") {
-				let item = {
-					content: todo.value,
-					isCompleted: false,
-					id: uuidv4(),
-				};
-				todos.value.unshift(item);
-				todo.value = "";
-				console.log(todos.value);
-			}
+		// function addTodo() {
+		// 	if (todo.value !== "") {
+		// 		let item = {
+		// 			content: todo.value,
+		// 			isCompleted: false,
+		// 			id: uuidv4(),
+		// 		};
+		// 		todos.value.unshift(item);
+		// 		todo.value = "";
+		// 		console.log(todos.value);
+		// 	}
+		// }
+		function clearComplete() {
+			console.log("clearComplete");
+			todos.value = todos.value.filter(t =>  {
+				console.log(t.isCompleted);
+				return t.isCompleted !== true
+				}
+				);
+		}
+		function deleteTodo(id) {
+			console.log(id);
+			todos.value = todos.value.filter(t=> {
+				return t.id !== id
+				})
 		}
 
 		return {
 			activeBtn,
 			todo,
 			filteredTodos,
-			addTodo,
-			showBtn,
+			// addTodo,
+			showDeleteAllBtn,
+
+			changeTab,
+			clearComplete,
+			deleteTodo,
 		};
 	},
 };
